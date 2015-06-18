@@ -14,7 +14,7 @@ var primitives2d = {};
    * @return {number}     The euclidian distance.
    */
   primitives2d.getDistance = function(x0, y0, x1, y1) {
-    return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+    return Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
   };
 
   /*******************************************************
@@ -310,8 +310,8 @@ var primitives2d = {};
   */
   primitives2d.getPointOnQuadraticCurve = function(t, x1, y1, x2, y2, xi, yi) {
     return {
-      x: Math.pow(1 - t, 2) * x1 + 2 * (1 - t) * t * xi + Math.pow(t, 2) * x2,
-      y: Math.pow(1 - t, 2) * y1 + 2 * (1 - t) * t * yi + Math.pow(t, 2) * y2
+      x: (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * xi + t * t * x2,
+      y: (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * yi + t * t * y2
     };
   };
 
@@ -404,10 +404,10 @@ var primitives2d = {};
   */
   primitives2d.getPointOnBezierCurve = function(t, x1, y1, x2, y2, cx, cy, dx, dy) {
     // Blending functions:
-    var B0_t = Math.pow(1 - t, 3),
-        B1_t = 3 * t * Math.pow(1 - t, 2),
-        B2_t = 3 * Math.pow(t, 2) * (1 - t),
-        B3_t = Math.pow(t, 3);
+    var B0_t = (1 - t) * (1 - t) * (1 - t),
+        B1_t = 3 * t * (1 - t) * (1 - t),
+        B2_t = 3 * t * t * (1 - t),
+        B3_t = t * t * t;
 
     return {
       x: (B0_t * x1) + (B1_t * cx) + (B2_t * dx) + (B3_t * x2),
@@ -501,6 +501,5 @@ var primitives2d = {};
   primitives2d.scaleRange = function(value, baseMin, baseMax, limitMin, limitMax) {
     return ((limitMax - limitMin) * (value - baseMin) / (baseMax - baseMin)) + limitMin;
   };
-
 
 }).call(this);
